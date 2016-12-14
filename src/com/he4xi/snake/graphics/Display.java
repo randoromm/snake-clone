@@ -23,9 +23,12 @@ public class Display {
         drawBackground();
     }
 
-    public void renderHead(int x, int y, int size) {
+    public void renderRectangle(int x, int y, int size) {
         g2d.setColor(Color.black);
         g2d.fillRect(x, y, size, size);
+
+        g2d.setColor(Color.gray);
+        g2d.drawRect(x, y, size, size);
     }
 
     private void drawBackground() {

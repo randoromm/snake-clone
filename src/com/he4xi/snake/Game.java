@@ -1,6 +1,6 @@
 package com.he4xi.snake;
 
-import com.he4xi.snake.entity.snake.Head;
+import com.he4xi.snake.entity.snake.Snake;
 import com.he4xi.snake.graphics.Display;
 import com.he4xi.snake.input.KeyInput;
 
@@ -14,13 +14,13 @@ import java.awt.image.BufferedImage;
  */
 public class Game extends JPanel implements Runnable {
 
-    public static final int WIDTH = 600, HEIGHT = 600;
+    public static final int WIDTH = 592, HEIGHT = 600;
 
     private JFrame frame;
     private Thread thread;
     private Display display;
     private KeyInput keys;
-    private Head snakeHead;
+    private Snake snake;
 
     private Graphics2D g2d;
     private BufferedImage image;
@@ -31,7 +31,7 @@ public class Game extends JPanel implements Runnable {
         frame = new JFrame("Snake");
         keys = new KeyInput();
         display = new Display(WIDTH, HEIGHT);
-        snakeHead = new Head(WIDTH / 2, HEIGHT / 2, 15);
+        snake = new Snake(20 * 15, 20 * 15, keys);
 
         frame.addKeyListener(keys);
     }
@@ -72,7 +72,7 @@ public class Game extends JPanel implements Runnable {
 
     private void render() {
         display.render(g2d);
-        snakeHead.render(display);
+        snake.render(display);
 
         Graphics g = getGraphics();
         g.drawImage(image, 0, 0, null);
@@ -81,7 +81,7 @@ public class Game extends JPanel implements Runnable {
 
     private void update() {
         keys.update();
-        snakeHead.update();
+        snake.update();
     }
 
     private synchronized void start() {
