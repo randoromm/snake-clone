@@ -15,7 +15,7 @@ import java.awt.image.BufferedImage;
  */
 public class Game extends JPanel implements Runnable {
 
-    public static final int WIDTH = 592, HEIGHT = 600;
+    public static final int WIDTH = 600, HEIGHT = 600;
     public static int score = 0;
 
     private JFrame frame;

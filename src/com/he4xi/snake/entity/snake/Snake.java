@@ -37,7 +37,7 @@ public class Snake extends Entity {
     public boolean isColliding() {
         int x = snakeRects.get(0).x;
         int y = snakeRects.get(0).y;
-        if (x < 0 || x + SIZE > Game.WIDTH || y < 0 || y + SIZE * 3 > Game.HEIGHT) {
+        if (x < 0 || x + SIZE > Game.WIDTH || y < 0 || y + SIZE > Game.HEIGHT) {
             // Multiplying by 3 because 2 tiles go out of frame.
             return true;
         }
