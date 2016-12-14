@@ -1,5 +1,6 @@
 package com.he4xi.snake;
 
+import com.he4xi.snake.entity.food.Food;
 import com.he4xi.snake.entity.snake.Snake;
 import com.he4xi.snake.graphics.Display;
 import com.he4xi.snake.input.KeyInput;
@@ -15,12 +16,14 @@ import java.awt.image.BufferedImage;
 public class Game extends JPanel implements Runnable {
 
     public static final int WIDTH = 592, HEIGHT = 600;
+    public static int score = 0;
 
     private JFrame frame;
     private Thread thread;
     private Display display;
     private KeyInput keys;
     private Snake snake;
+    private Food food;
 
     private Graphics2D g2d;
     private BufferedImage image;
@@ -32,7 +35,7 @@ public class Game extends JPanel implements Runnable {
         keys = new KeyInput();
         display = new Display(WIDTH, HEIGHT);
         snake = new Snake(20 * 15, 20 * 15, keys);
-
+        food = new Food(snake);
         frame.addKeyListener(keys);
     }
 
@@ -62,7 +65,7 @@ public class Game extends JPanel implements Runnable {
             if (System.currentTimeMillis() - timer > 1000) {
                 timer += 1000;
                 System.out.println("FPS: " + frames + " ,UPS: " + updates);
-                frame.setTitle("Snake | " + frames + " FPS, " + updates + " UPS");
+                frame.setTitle("Snake | SCORE: " + score);
                 updates = 0;
                 frames = 0;
             }
@@ -73,6 +76,7 @@ public class Game extends JPanel implements Runnable {
     private void render() {
         display.render(g2d);
         snake.render(display);
+        food.render(display);
 
         Graphics g = getGraphics();
         g.drawImage(image, 0, 0, null);
@@ -82,6 +86,15 @@ public class Game extends JPanel implements Runnable {
     private void update() {
         keys.update();
         snake.update();
+        food.update();
+
+        if (snake.isColliding()) {
+            JOptionPane.showMessageDialog(frame, "You died!\n" +
+                    "Your score was: " + score + ".");
+            score = 0;
+            snake.reset();
+            food.reset();
+        }
     }
 
     private synchronized void start() {

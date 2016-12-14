@@ -23,16 +23,24 @@ public class Display {
         drawBackground();
     }
 
-    public void renderRectangle(int x, int y, int size) {
-        g2d.setColor(Color.black);
+    public void renderSnakeRect(int x, int y, int size) {
+        g2d.setColor(new Color(0xA3C31F));
         g2d.fillRect(x, y, size, size);
 
-        g2d.setColor(Color.gray);
+        g2d.setColor(new Color(0x3E7424));
         g2d.drawRect(x, y, size, size);
     }
 
+    public void renderFood(int x, int y, int size) {
+        g2d.setColor(new Color(0xFF3DC5));
+        g2d.fillOval(x, y, size, size);
+
+        g2d.setColor(new Color(0x97004C));
+        g2d.drawOval(x, y, size, size);
+    }
+
     private void drawBackground() {
-        g2d.setColor(new Color(0xA0FF1F));
+        g2d.setColor(new Color(0x323232));
         g2d.fillRect(0, 0, width, height);
     }
 

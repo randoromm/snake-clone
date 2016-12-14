@@ -18,35 +18,32 @@ public class Snake extends Entity {
     public int xDir, yDir;
     public final int SIZE = 15;
     private int count = 0;
-    private int speed = 20; // More is slower. 1 Movement in how many updates?
+    private int speed = 15; // More is slower. 1 Movement in how many updates?
+    private boolean growing;
 
-    public ArrayList<Rectangle> snake = new ArrayList<>();
+    public ArrayList<Rectangle> snakeRects = new ArrayList<>();
 
-    public Snake(int x, int y, KeyInput input) {
-        this.x = x;
-        this.y = y;
+    public Snake(int xInit, int yInit, KeyInput input) {
+        this.xInit = xInit;
+        this.yInit = yInit;
         this.input = input;
 
-        xDir = 1;
+        xDir = 0;
         yDir = 0;
 
-        snake.add(new Rectangle(x, y, SIZE, SIZE));
-
-        for (int i = 1; i <= 2; i++) {
-            snake.add(new Rectangle(x - i * SIZE, y, SIZE, SIZE));
-        }
-
+        snakeRects.add(new Rectangle(this.xInit, this.yInit, SIZE, SIZE));
     }
 
     public boolean isColliding() {
-        int x = snake.get(0).x;
-        int y = snake.get(0).y;
-        if (x < 0 || x + SIZE > Game.WIDTH || y < 0 || y + SIZE > Game.HEIGHT) {
+        int x = snakeRects.get(0).x;
+        int y = snakeRects.get(0).y;
+        if (x < 0 || x + SIZE > Game.WIDTH || y < 0 || y + SIZE * 3 > Game.HEIGHT) {
+            // Multiplying by 3 because 2 tiles go out of frame.
             return true;
         }
 
-        for (int i = 2; i < snake.size(); i++) {
-            if (snake.get(0).contains(snake.get(i))) return true;
+        for (int i = 2; i < snakeRects.size(); i++) {
+            if (snakeRects.get(0).contains(snakeRects.get(i))) return true;
         }
 
         return false;
@@ -80,26 +77,53 @@ public class Snake extends Entity {
             getDirectionsFromInput();
 
             if (count % speed == 0) {
-                Rectangle temp = snake.get(0);
+                Rectangle temp = snakeRects.get(0);
+                Rectangle last = snakeRects.get(snakeRects.size() - 1);
                 Rectangle newRect = new Rectangle(temp.x + xDir * SIZE, temp.y + yDir * SIZE, SIZE, SIZE);
-                for (int i = snake.size() - 1; i >= 1; i--) {
-                    snake.set(i, snake.get(i - 1));
+                for (int i = snakeRects.size() - 1; i >= 1; i--) {
+                    snakeRects.set(i, snakeRects.get(i - 1));
                 }
-                snake.set(0, newRect);
+                snakeRects.set(0, newRect);
+
+                if (growing) {
+                    snakeRects.add(last);
+                    growing = false;
+                }
             }
         }
-        if (count > 10000) count = 0;
+
+        // Every 20 seconds.
+        if (count > 900){
+            if (speed >= 4) {
+                speed--;
+            }
+            count = 0;
+        }
     }
 
     @Override
     public void update() {
+
         move();
     }
 
     @Override
     public void render(Display display) {
-        for (Rectangle rect : snake) {
-            display.renderRectangle(rect.x, rect.y, SIZE);
+        for (Rectangle rect : snakeRects) {
+            display.renderSnakeRect(rect.x, rect.y, SIZE);
         }
+    }
+
+    public void addRect() {
+        growing = true;
+    }
+
+    public void reset() {
+        snakeRects.clear();
+        xDir = 0;
+        yDir = 0;
+        speed = 15;
+
+        snakeRects.add(new Rectangle(this.xInit, this.yInit, SIZE, SIZE));
     }
 }
