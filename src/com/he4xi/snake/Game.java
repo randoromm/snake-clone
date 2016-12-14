@@ -1,8 +1,11 @@
 package com.he4xi.snake;
 
+import com.he4xi.snake.entity.snake.Head;
+import com.he4xi.snake.graphics.Display;
+import com.he4xi.snake.input.KeyInput;
+
 import javax.swing.*;
 import java.awt.*;
-import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 
 /**
@@ -15,8 +18,10 @@ public class Game extends JPanel implements Runnable {
 
     private JFrame frame;
     private Thread thread;
+    private Display display;
+    private KeyInput keys;
+    private Head snakeHead;
 
-    // Rendering
     private Graphics2D g2d;
     private BufferedImage image;
 
@@ -24,6 +29,11 @@ public class Game extends JPanel implements Runnable {
 
     public Game() {
         frame = new JFrame("Snake");
+        keys = new KeyInput();
+        display = new Display(WIDTH, HEIGHT);
+        snakeHead = new Head(WIDTH / 2, HEIGHT / 2, 15);
+
+        frame.addKeyListener(keys);
     }
 
     @Override
@@ -51,7 +61,7 @@ public class Game extends JPanel implements Runnable {
 
             if (System.currentTimeMillis() - timer > 1000) {
                 timer += 1000;
-                System.out.println("FPS: " + frames + " ,UPS: " + updates + "\n");
+                System.out.println("FPS: " + frames + " ,UPS: " + updates);
                 frame.setTitle("Snake | " + frames + " FPS, " + updates + " UPS");
                 updates = 0;
                 frames = 0;
@@ -61,10 +71,8 @@ public class Game extends JPanel implements Runnable {
     }
 
     private void render() {
-        g2d.clearRect(0, 0, WIDTH, HEIGHT);
-
-        g2d.setColor(Color.CYAN);
-        g2d.fillOval(100, 100, 50, 50);
+        display.render(g2d);
+        snakeHead.render(display);
 
         Graphics g = getGraphics();
         g.drawImage(image, 0, 0, null);
@@ -72,7 +80,8 @@ public class Game extends JPanel implements Runnable {
     }
 
     private void update() {
-
+        keys.update();
+        snakeHead.update();
     }
 
     private synchronized void start() {
