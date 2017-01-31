@@ -5,5 +5,5 @@ This game was a quick 3 hour project of mine. I wrote it to learn java and game 
 
 ### Bugs ###
 
-* The boundaries of the grid/arena/level are not the same for Linux and Windows.
+* The boundaries of the grid/arena/level are not the same for Linux and Windows (Correct on Windows).
 * You can move the snake backwards (inside itself) if you are quick enough.
